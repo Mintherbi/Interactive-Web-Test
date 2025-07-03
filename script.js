@@ -30,8 +30,58 @@ function createFloatingText(text) {
         span.style.left = `${randomX}px`;
         span.style.top = `${randomY}px`;
         
+        // Add collision detection
+        span.dataset.originalColor = 'white';
+        span.dataset.hasHitWall = 'false';
+        
         document.body.appendChild(span);
     }
+    
+    // Start collision detection
+    startCollisionDetection();
+}
+
+function startCollisionDetection() {
+    const characters = document.querySelectorAll('.floating-number');
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    function checkCollisions() {
+        characters.forEach(char => {
+            const rect = char.getBoundingClientRect();
+            const charWidth = rect.width;
+            const charHeight = rect.height;
+            
+            // Check if character hits any wall
+            const hitsLeftWall = rect.left <= 0;
+            const hitsRightWall = rect.right >= viewportWidth;
+            const hitsTopWall = rect.top <= 0;
+            const hitsBottomWall = rect.bottom >= viewportHeight;
+            
+            if (hitsLeftWall || hitsRightWall || hitsTopWall || hitsBottomWall) {
+                if (char.dataset.hasHitWall === 'false') {
+                    // Change color when hitting wall for the first time
+                    const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    char.style.color = randomColor;
+                    char.style.textShadow = `0 0 10px ${randomColor}`;
+                    char.dataset.hasHitWall = 'true';
+                    
+                    // Add bounce effect
+                    char.style.transform = 'scale(1.3)';
+                    setTimeout(() => {
+                        char.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            } else {
+                // Reset wall hit status when character moves away from walls
+                char.dataset.hasHitWall = 'false';
+            }
+        });
+    }
+    
+    // Check collisions every 100ms
+    setInterval(checkCollisions, 100);
 }
 
 function showTime() {
