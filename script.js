@@ -1,6 +1,7 @@
 function createFloatingText(text) {
-    const timeText = document.getElementById('timeText');
-    timeText.innerHTML = '';
+    // Remove any existing floating characters
+    const existingChars = document.querySelectorAll('.floating-number');
+    existingChars.forEach(char => char.remove());
     
     for (let i = 0; i < text.length; i++) {
         const char = text[i];
@@ -20,7 +21,16 @@ function createFloatingText(text) {
         // Random animation delay
         span.style.animationDelay = `${Math.random() * 2}s`;
         
-        timeText.appendChild(span);
+        // Position randomly across the entire viewport
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const randomX = Math.random() * viewportWidth;
+        const randomY = Math.random() * viewportHeight;
+        
+        span.style.left = `${randomX}px`;
+        span.style.top = `${randomY}px`;
+        
+        document.body.appendChild(span);
     }
 }
 
