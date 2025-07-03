@@ -44,6 +44,93 @@
             border-radius: 10px;
             padding: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .floating-number {
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+            margin: 0 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .floating-number:nth-child(1) { animation-delay: 0s; }
+        .floating-number:nth-child(2) { animation-delay: 0.2s; }
+        .floating-number:nth-child(3) { animation-delay: 0.4s; }
+        .floating-number:nth-child(4) { animation-delay: 0.6s; }
+        .floating-number:nth-child(5) { animation-delay: 0.8s; }
+        .floating-number:nth-child(6) { animation-delay: 1s; }
+        .floating-number:nth-child(7) { animation-delay: 1.2s; }
+        .floating-number:nth-child(8) { animation-delay: 1.4s; }
+        .floating-number:nth-child(9) { animation-delay: 1.6s; }
+        .floating-number:nth-child(10) { animation-delay: 1.8s; }
+        .floating-number:nth-child(11) { animation-delay: 2s; }
+        .floating-number:nth-child(12) { animation-delay: 2.2s; }
+        .floating-number:nth-child(13) { animation-delay: 2.4s; }
+        .floating-number:nth-child(14) { animation-delay: 2.6s; }
+        .floating-number:nth-child(15) { animation-delay: 2.8s; }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(-8px) rotate(2deg);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-15px) rotate(0deg);
+                opacity: 1;
+            }
+            75% {
+                transform: translateY(-8px) rotate(-2deg);
+                opacity: 0.8;
+            }
+        }
+
+        .space-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: particle-float 4s linear infinite;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 0.5s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 1.5s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 2.5s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 3.5s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 1.8s; }
+
+        @keyframes particle-float {
+            0% {
+                transform: translateY(100px) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
         }
 
         .time-button {
@@ -82,7 +169,18 @@
     <div class="container">
         <h1>⏰ Time Display</h1>
         <div id="timeDisplay" class="time-display hidden">
-            Click the button to see the time!
+            <div class="space-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+            <span id="timeText">Click the button to see when you clicked it!</span>
         </div>
         <button class="time-button" onclick="showTime()">
             🕐 Show Current Time
@@ -90,6 +188,20 @@
     </div>
 
     <script>
+        function createFloatingText(text) {
+            const timeText = document.getElementById('timeText');
+            timeText.innerHTML = '';
+            
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const span = document.createElement('span');
+                span.className = 'floating-number';
+                span.textContent = char;
+                span.style.animationDelay = `${i * 0.1}s`;
+                timeText.appendChild(span);
+            }
+        }
+
         function showTime() {
             const timeDisplay = document.getElementById('timeDisplay');
             const now = new Date();
@@ -112,7 +224,8 @@
             timeDisplay.classList.add('hidden');
             
             setTimeout(() => {
-                timeDisplay.textContent = `Button clicked at: ${formattedTime}`;
+                const displayText = `Button clicked at: ${formattedTime}`;
+                createFloatingText(displayText);
                 timeDisplay.classList.remove('hidden');
                 timeDisplay.classList.add('visible');
             }, 150);
@@ -120,8 +233,8 @@
 
         // Initialize with a message instead of auto-showing time
         window.onload = function() {
+            createFloatingText('Click the button to see when you clicked it!');
             const timeDisplay = document.getElementById('timeDisplay');
-            timeDisplay.textContent = 'Click the button to see when you clicked it!';
             timeDisplay.classList.remove('hidden');
             timeDisplay.classList.add('visible');
         };
