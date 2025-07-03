@@ -94,7 +94,7 @@
             const timeDisplay = document.getElementById('timeDisplay');
             const now = new Date();
             
-            // Format the time with options
+            // Format the time with options - showing exact click time
             const timeOptions = {
                 weekday: 'long',
                 year: 'numeric',
@@ -112,15 +112,18 @@
             timeDisplay.classList.add('hidden');
             
             setTimeout(() => {
-                timeDisplay.textContent = formattedTime;
+                timeDisplay.textContent = `Button clicked at: ${formattedTime}`;
                 timeDisplay.classList.remove('hidden');
                 timeDisplay.classList.add('visible');
             }, 150);
         }
 
-        // Show time on page load
+        // Initialize with a message instead of auto-showing time
         window.onload = function() {
-            showTime();
+            const timeDisplay = document.getElementById('timeDisplay');
+            timeDisplay.textContent = 'Click the button to see when you clicked it!';
+            timeDisplay.classList.remove('hidden');
+            timeDisplay.classList.add('visible');
         };
     </script>
 </body>
